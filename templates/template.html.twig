@@ -1,0 +1,37 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+    <header class="jumbotron jumbotron-fluid bg-info text-white mb-0">
+        <section class="container">
+            <h1 class="display-4">Bank</h1>
+        </section>
+    </header>
+    <hr class="my-4">
+    <ul class="nav mt-0 bg-info py-1">
+        <li class="nav-item">
+            <a class="nav-link text-white" href="#">Accueil</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" href="#">Virements</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" href="#">Souscrire</a>
+        </li>
+    </ul>
+
+    <main class="container my-5">
+        {% block main %}{% endblock %}
+    </main>
+
+    <footer class="jumbotron jumbotron-fluid bg-info text-white mb-0">
+        <section class="container">
+            <p class="lead">Bank Tous droits réservés</p>
+        </section>
+    </footer>
+
+{% endblock %}
+
+
+
+

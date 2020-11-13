@@ -6,8 +6,11 @@ use App\Entity\Account;
 use App\Entity\Operation;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use App\DataFixtures\AccountFixtures;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class OperationFixtures extends Fixture
+
+class OperationFixtures extends Fixture implements DependentFixtureInterface
 {
 
 
@@ -64,20 +67,26 @@ class OperationFixtures extends Fixture
                 "account_id" => "2"
             )
         );
+        $account = $this->getReference(AccountFixtures::ADMIN_ACCOUNT_REFERENCE);
+        foreach($datas as $operations) {
 
-        foreach($datas as $i => $operation) {
-
-        $operation[$i] = new Operation();
-        $operation[$i]->setOperationType($operation["operation_type"])
-                      ->setAmount($operation["amount"])
-                      ->setRegistered(new \DateTime())
-                      ->setLabel($operation["registered"])
-                      ->setAccountId($operation["account_id"]);
+        $operation = new Operation();
+        $operation ->setOperationType($operations["operation_type"])
+                    ->setAmount($operations["amount"])
+                    ->setRegistered(new \DateTime())
+                    ->setLabel($operations["registered"])
+                    ->setAccountId($account);
 
         $manager->persist($operation);
         
         }
         $manager->flush();
 
+    }
+    public function getDependencies()
+    {
+        return array(
+            UserFixtures::class,
+        );
     }
 }

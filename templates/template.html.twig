@@ -7,23 +7,42 @@
             <h1 class="display-4 animate__animated animate__bounce d-flex justify-content-center">Bank</h1>
         </section>
     </header>
-    <ul class="nav mt-0 bg-info py-1">
-        <li class="nav-item">
-            <a class="nav-link text-white" href="{{ path("bank") }}">Accueil</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-white" href="{{ path("virement") }}">Virements</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-white" href="#">Souscrire</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-white" href="#">Statistiques</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-white" href="#">Blog</a>
-        </li>
-    </ul>
+
+    <nav class="navbar navbar-expand-lg bg-info">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mt-0 bg-info py-1">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ path("bank") }}">Accueil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ path("virement") }}">Virements</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="#">Souscrire</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="#">Statistiques</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="#">Blog</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="">Mon profil</a>
+                </li>
+            </ul>
+        </div>
+        <aside class="text-white">
+            {% if app.user %}
+                <a class='btn btn-secondary mx-1' href="{{ path("app_logout") }}">Déconnexion</a>
+            {% else %}
+                <a class='btn btn-secondary mx-1' href="{{ path("app_login") }}">Connexion</a>
+            {% endif %}        
+        </aside>
+    </nav>
 
     <main class="container my-5">
         {% block main %}{% endblock %}

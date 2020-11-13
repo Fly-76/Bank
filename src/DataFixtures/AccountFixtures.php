@@ -16,7 +16,8 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 class AccountFixtures extends Fixture implements DependentFixtureInterface
 {
-    
+    public const ADMIN_ACCOUNT_REFERENCE = 'admin-account';
+
     public function load(ObjectManager $manager)
     {
            // this reference returns the User object created in UserFixtures
@@ -32,7 +33,7 @@ class AccountFixtures extends Fixture implements DependentFixtureInterface
         }
         
         $manager->flush();
-
+        $this->addReference(self::ADMIN_ACCOUNT_REFERENCE, $account);
     }
     
     public function getDependencies()

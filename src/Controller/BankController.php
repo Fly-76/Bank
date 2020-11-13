@@ -6,6 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Operation;
+use App\Entity\Account;
+use APP\Repository;
 
 class BankController extends AbstractController
 {
@@ -15,9 +17,13 @@ class BankController extends AbstractController
      */
     public function index(): Response
     {
+        $accountRepository = $this->getDoctrine()->getRepository(Account::class);
+        $accounts = $accountRepository->findAll();
+        
         return $this->render('bank/index.html.twig', [
-            'controller_name' => 'BankController',
+            'accounts' => $accounts,
         ]);
+       
     }
 
     /**

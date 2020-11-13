@@ -74,7 +74,7 @@ class OperationFixtures extends Fixture implements DependentFixtureInterface
         $operation ->setOperationType($operations["operation_type"])
                     ->setAmount($operations["amount"])
                     ->setRegistered(new \DateTime())
-                    ->setLabel($operations["registered"])
+                    ->setLabel($operations["label"])
                     ->setAccountId($account);
 
         $manager->persist($operation);

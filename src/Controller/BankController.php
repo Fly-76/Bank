@@ -29,8 +29,9 @@ class BankController extends AbstractController
         $operations = $operationRepository->findAll();
 
         return $this->render('bank/operation.html.twig', [
-            'operations' => $operations,
+            'operations' => $operations
         ]);
+        dump($operations);
     }
 
     /**

@@ -87,4 +87,13 @@ class BankController extends AbstractController
             'errors' => $errors,
         ]);
     }
+
+    /**
+     * @Route("/blog", name="blog")
+     */
+    public function blog(): Response
+    {
+        return $this->render('bank/blog.html.twig');
+    }
+
 }

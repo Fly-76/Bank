@@ -1,0 +1,18 @@
+{% extends 'template.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/css/blog.css') }}">
+{% endblock %}
+
+{% block title %}Actualité{% endblock %}
+
+{% block main %}
+
+    <h2>Toute l'actualité</h2>
+    <div id="section" class="d-flex flex-wrap"></div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('assets/js/blog.js') }}"></script>
+{% endblock %}

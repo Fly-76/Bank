@@ -16,7 +16,7 @@
         <p class="card-text mb-3">{{ account.amount }} €</p>
         <div>
             {# vers la page d'un seul account (avec ses operations) #}
-            <a  class="btn btn-secondary" href="">Details</a>
+            <a  class="btn btn-secondary" href="{{ path('operation', {id: account.id}) }}">Details</a>
             {# vers la page de retrait guichet #}
             <a class="btn btn-success">Retrait</a>
         </div>    

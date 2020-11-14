@@ -1,0 +1,17 @@
+{% extends 'template.html.twig' %}
+
+{% block title %}Mettre à jour mon profil{% endblock %}
+
+{% block main %}
+
+    <h2>Mon profil</h2>
+
+    {% for error in errors %}
+        <div class="alert-danger">
+            {{ error.message }}
+        </div>
+    {% endfor %}
+
+    {{ form(form) }}
+
+{% endblock %}

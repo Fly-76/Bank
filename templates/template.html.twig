@@ -37,7 +37,7 @@
         </div>
         <aside class="text-white">
             {% if app.user %}
-                <a class='btn btn-secondary mx-1' href="{{ path("app_logout") }}">Déconnexion</a>
+                {{ app.user.civility }} {{ app.user.lastname }} {{ app.user.firstname }} <a class='btn btn-secondary mx-1' href="{{ path("app_logout") }}">Déconnexion</a>
             {% else %}
                 <a class='btn btn-secondary mx-1' href="{{ path("app_login") }}">Connexion</a>
             {% endif %}        

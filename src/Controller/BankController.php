@@ -33,12 +33,15 @@ class BankController extends AbstractController
     }
 
     /**
-     * @Route("/operation", name="operation")
+     * @Route("/operation/{id}", name="operation", requirements={"id"="\d+"})
      */
-    public function operation(): Response
+    public function operation(int $account_id): Response
     {
         $operationRepository = $this->getDoctrine()->getRepository(Operation::class);
-        $operations = $operationRepository->findAll();
+        $operations = $operationRepository->find($account_id);
+
+        // $operationRepository = $this->getDoctrine()->getRepository(Operation::class);
+        // $operations = $operationRepository->findAll();
 
         return $this->render('bank/operation.html.twig', [
             'operations' => $operations

@@ -4,9 +4,15 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+
 use App\Entity\Operation;
 use App\Entity\Account;
+use App\Entity\User;
+use App\Form\ProfilType;
+
 use APP\Repository;
 
 class BankController extends AbstractController
@@ -47,6 +53,35 @@ class BankController extends AbstractController
     {
         return $this->render('bank/virement.html.twig', [
             'controller_name' => 'BankController',
+        ]);
+    }
+
+    /**
+     * @Route("/profil", name="update_profil")
+     */
+    public function updateProfil(Request $request, ValidatorInterface $validator): Response
+    {
+        $errors = null;
+
+        $user = $this->getUser();
+        $form = $this->createForm(ProfilType::class, $user);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $errors = $validator->validate($user);
+            if(count($errors) === 0) {
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                $this->addFlash('success','Votre profil a bien été enregistré');
+                return $this->redirectToRoute('bank');
+            }
+        }
+
+        return $this->render('bank/updateProfil.html.twig', [
+            'form' => $form->createView(),
+            'errors' => $errors,
         ]);
     }
 }

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -22,6 +23,9 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email."
+     * )
      */
     private $email;
 
@@ -48,16 +52,37 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=30)
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 30,
+     *      minMessage = "Le nom de la ville doit comporter au moins {{ limit }} caractères",
+     *      maxMessage = "Le nom de la ville doit comporter au plus {{ limit }} caractères",
+     *      allowEmptyString = false
+     * )
      */
     private $city;
 
     /**
      * @ORM\Column(type="string", length=10)
+     * @Assert\Length(
+     *      min = 4,
+     *      max = 10,
+     *      minMessage = "Le code postal doit comporter au moins {{ limit }} caractères",
+     *      maxMessage = "Le nom de la ville doit comporter au plus {{ limit }} caractères",
+     *      allowEmptyString = false
+     * )
      */
     private $zip_code;
 
     /**
      * @ORM\Column(type="string", length=10)
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 10,
+     *      minMessage = "Les civilté doivent comporter au moins {{ limit }} caractères",
+     *      maxMessage = "Les civilté doivent comporter au plus {{ limit }} caractères",
+     *      allowEmptyString = false
+     * )
      */
     private $civility;
 

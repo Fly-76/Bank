@@ -3,6 +3,15 @@
 {% block title %}Virement{% endblock %}
 
 {% block main %}
-<h2>Virement</h2>
+
+    <h2>Virement</h2>
+
+    {% for error in errors %}
+        <div class="alert-danger">
+            {{ error.message }}
+        </div>
+    {% endfor %}
+
+    {{ form(form) }}
 
 {% endblock %}

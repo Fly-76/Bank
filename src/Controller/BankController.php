@@ -31,7 +31,6 @@ class BankController extends AbstractController
         $accountRepository = $this->getDoctrine()->getRepository(Account::class);
         $accounts = $user->getAccounts();
 
-        dump($accounts);
         
         return $this->render('bank/index.html.twig', [
             'accounts' => $accounts,
@@ -181,6 +180,27 @@ class BankController extends AbstractController
     public function blog(): Response
     {
         return $this->render('bank/blog.html.twig');
+    }
+      /**
+     * @Route("/removeAccount/{id}", name="removeAccount", requirements={"id"="\d+"})
+     */
+    public function removeAccount(int $id): Response
+    {
+
+        
+        $user = $this->getUser();
+        $accountRepository = $this->getDoctrine()->getRepository(Account::class);
+        $account = $accountRepository->findOneBy(['id' => $id]);
+      
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($account);
+        $entityManager->flush();
+
+       
+        return $this->redirectToRoute('index');
+
+     
     }
 
 }

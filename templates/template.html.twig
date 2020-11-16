@@ -22,7 +22,7 @@
                     <a class="nav-link text-white" href="{{ path("virement") }}">Virements</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="#">Souscrire</a>
+                    <a class="nav-link text-white" href="{{ path("new_account") }}">Souscrire</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" href="#">Statistiques</a>
@@ -35,6 +35,7 @@
                 </li>
             </ul>
         </div>
+
         <aside class="text-white">
             {% if app.user %}
                 {{ app.user.civility }} {{ app.user.lastname }} {{ app.user.firstname }} <a class='btn btn-secondary mx-1' href="{{ path("app_logout") }}">Déconnexion</a>
@@ -45,6 +46,14 @@
     </nav>
 
     <main class="container my-5">
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
         {% block main %}{% endblock %}
     </main>
 

@@ -12,7 +12,6 @@ use App\Entity\Operation;
 use App\Entity\Account;
 use App\Entity\User;
 use App\Form\ProfilType;
-use App\Form\VirementType;
 
 use APP\Repository;
 
@@ -49,32 +48,10 @@ class BankController extends AbstractController
     /**
      * @Route("/virement/", name="virement")
      */
-    public function virement(Request $request, ValidatorInterface $validator): Response
+    public function virement(): Response
     {
-        $errors = null;
-
-        $user = $this->getUser();
-        $accounts = $user->getAccounts();
-
-        if (count($accounts) < 2) {
-            $this->addFlash('success','Vous devez nécéssairement avoir plus de deux comptes pour effectuer un virement');
-            return $this->redirectToRoute('bank');
-        }
-
-        $form = $this->createForm(VirementType::class, null, ['accounts' => $accounts]);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $data = $form->getData();
-            dump ($data['debit']);
-            dump ($data['amount']);
-            dump ($data['credit']);
-
-        }
-
         return $this->render('bank/virement.html.twig', [
-            'form' => $form->createView(),
-            'errors' => $errors,
+            'controller_name' => 'BankController',
         ]);
     }
 

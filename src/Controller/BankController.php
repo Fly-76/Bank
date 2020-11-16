@@ -17,6 +17,7 @@ use App\Form\NewAccountType;
 use App\Form\VirementType;
 
 use APP\Repository;
+use DateTime;
 
 class BankController extends AbstractController
 {
@@ -67,33 +68,46 @@ class BankController extends AbstractController
             $this->addFlash('success','Vous devez nécéssairement avoir plus de deux comptes pour effectuer un virement');
             return $this->redirectToRoute('bank');
         }
-
+        // creation du formulaire
         $form = $this->createForm(VirementType::class, null, ['accounts' => $accounts]);
         $form->handleRequest($request);
-
+        // si le formulaire est soumit
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
   
+            // Recupere l'objet Account pour modifier les donnée apres un débit ou un crédit
             $accountRepository = $this->getDoctrine()->getRepository(Account::class);
             $accountDebit = $accountRepository->findOneBy(['id' => $data['debit']]);
             $accountCredit = $accountRepository->findOneBy(['id' => $data['credit']]);
-            $entityManager = $this->getDoctrine()->getManager();
-
-            dump ($data['debit']);
-            dump ($data['amount']);
-            dump ($data['credit']);
-
-            // generer une op de debit
             $accountDebit->setAmount($accountDebit->getAmount() - $data['amount']);
-            // generer une op de credit
             $accountCredit->setAmount($accountCredit->getAmount() + $data['amount']);
-            // generer la mise a jour du compte a debiter
+
+            // Crée un objet Operation de debit
+            $operationDebit = new Operation();
+            $operationDebit->setAccountId($accountDebit);
+            $operationDebit->setAmount("-" . $data['amount']);
+            $operationDebit->setOperationType("Débit");
+            $operationDebit->setRegistered(new \DateTime());
+            $operationDebit->setLabel("Virement vers le compte "  . $accountCredit->getId());
+
+            // Crée un objet Operation de credit
+            $operationCredit = new Operation();
+            $operationCredit->setAccountId($accountCredit);
+            $operationCredit->setAmount($data['amount']);
+            $operationCredit->setOperationType("Crédit");
+            $operationCredit->setRegistered(new \DateTime());
+            $operationCredit->setLabel("Virement depuis le compte "  . $accountDebit->getId());
+
+            // Persiste et flush toutes les données précédemment modifiées ou ajoutées
+            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($accountDebit);
-            // generer la mise a jour du compte a crediter
             $entityManager->persist($accountCredit);
+            $entityManager->persist($operationDebit);
+            $entityManager->persist($operationCredit);
             $entityManager->flush();
             
-            
+            $this->addFlash('success','Votre virement a bien été effectué.');
+            return $this->redirectToRoute('bank');
         }
 
         return $this->render('bank/virement.html.twig', [

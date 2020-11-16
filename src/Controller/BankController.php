@@ -13,6 +13,7 @@ use App\Entity\Operation;
 use App\Entity\Account;
 use App\Entity\User;
 use App\Form\ProfilType;
+use App\Form\NewAccountType;
 use App\Form\VirementType;
 
 use APP\Repository;
@@ -134,10 +135,44 @@ class BankController extends AbstractController
       /**
      * @Route("/new_account", name="new_account")
      */
-    public function newAccount(): Response
+    public function newAccount(Request $request, ValidatorInterface $validator): Response
     {
+        $errors = null;
         $account = new Account();
-        return $this->render('bank/new_account.html.twig');
+        $user = $this->getUser();
+        $form = $this->createForm(NewAccountType::class, $account);
+
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+            $account = $form->getData();
+            //get the object AccountType
+            $account_type_object = $form->get('accountType')->getData();
+            //get only the string label of AccountType
+            $account_type = $account_type_object->getLabel();
+            // connect account_type to new account
+            $account->setAccountType($account_type);
+
+            $errors = $validator->validate($account);
+            if(count($errors) === 0){
+
+                $entityManager = $this->getDoctrine()->getManager();
+                //assigne l'utilisateur connecté
+                $account->setUser($user);
+                //assigne la date de creation 
+                $account->setOpeningDate(new\DateTime('now'));
+                $entityManager->persist($account);
+                $entityManager->flush();
+                // $this->addFlash('success, votre compte à bien été créé');
+                return $this->redirectToRoute('index');
+            }
+        }
+
+        return $this->render('bank/new_account.html.twig', [
+                'form' => $form->createView(),
+                'errors' => $errors,
+        ]);
     }
 
     /**

@@ -5,9 +5,16 @@
 {% block main %}
 
 
+<h2>Creer un nouveau compte</h2>
+
+  {% for error in errors %}
+        <div class="alert-danger">
+            {{ error.message }}
+        </div>
+  {% endfor %}
 
 <div class="d-flex flex-wrap">
-Page new account
+{{form(form)}}
 </div>
   
 

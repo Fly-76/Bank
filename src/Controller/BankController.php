@@ -8,11 +8,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+use App\Repository\AccountRepository;
 use App\Entity\Operation;
 use App\Entity\Account;
 use App\Entity\User;
 use App\Form\ProfilType;
 use App\Form\NewAccountType;
+use App\Form\VirementType;
 
 use APP\Repository;
 
@@ -53,12 +55,53 @@ class BankController extends AbstractController
     /**
      * @Route("/virement/", name="virement")
      */
-    public function virement(): Response
-    {
+    public function virement(Request $request): Response
+    {  
+        
+        $errors = null;
+
+        $user = $this->getUser();
+        $accounts = $user->getAccounts();
+
+        if (count($accounts) < 2) {
+            $this->addFlash('success','Vous devez nécéssairement avoir plus de deux comptes pour effectuer un virement');
+            return $this->redirectToRoute('bank');
+        }
+
+        $form = $this->createForm(VirementType::class, null, ['accounts' => $accounts]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+  
+            $accountRepository = $this->getDoctrine()->getRepository(Account::class);
+            $accountDebit = $accountRepository->findOneBy(['id' => $data['debit']]);
+            $accountCredit = $accountRepository->findOneBy(['id' => $data['credit']]);
+            $entityManager = $this->getDoctrine()->getManager();
+
+            dump ($data['debit']);
+            dump ($data['amount']);
+            dump ($data['credit']);
+
+            // generer une op de debit
+            $accountDebit->setAmount($accountDebit->getAmount() - $data['amount']);
+            // generer une op de credit
+            $accountCredit->setAmount($accountCredit->getAmount() + $data['amount']);
+            // generer la mise a jour du compte a debiter
+            $entityManager->persist($accountDebit);
+            // generer la mise a jour du compte a crediter
+            $entityManager->persist($accountCredit);
+            $entityManager->flush();
+            
+            
+        }
+
         return $this->render('bank/virement.html.twig', [
-            'controller_name' => 'BankController',
+            'form' => $form->createView(),
+            'errors' => $errors,
         ]);
     }
+
 
     /**
      * @Route("/profil", name="update_profil")

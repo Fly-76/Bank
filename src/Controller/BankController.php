@@ -23,8 +23,12 @@ class BankController extends AbstractController
      */
     public function index(): Response
     {
+        $user = $this->getUser();
+
         $accountRepository = $this->getDoctrine()->getRepository(Account::class);
-        $accounts = $accountRepository->findAll();
+        $accounts = $user->getAccounts();
+
+        dump($accounts);
         
         return $this->render('bank/index.html.twig', [
             'accounts' => $accounts,
@@ -82,6 +86,15 @@ class BankController extends AbstractController
             'form' => $form->createView(),
             'errors' => $errors,
         ]);
+    }
+
+      /**
+     * @Route("/new_account", name="new_account")
+     */
+    public function newAccount(): Response
+    {
+        $account = new Account();
+        return $this->render('bank/new_account.html.twig');
     }
 
     /**

@@ -14,13 +14,18 @@ class VirementType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
+    
         $accounts = $options['accounts'];
         $choices = [];
+        dump($options);
         foreach ($accounts as $account){
-            $choices[] = $account->getId();
-        }
 
+            $choices[] =  [$account->getAccountType() => $account->getAccountType()];
+
+            dump($account->getAccountType());
+            dump($choices);
+        }
+        
         $builder
             ->add('debit', ChoiceType::class, [
                 'label' => 'Compte à débiter',

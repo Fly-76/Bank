@@ -58,11 +58,9 @@ class BankController extends AbstractController
     /**
      * @Route("/virement/", name="virement")
      */
-    public function virement(Request $request): Response
+    public function virement(Request $request, ValidatorInterface $validator): Response
     {  
-        
         $errors = null;
-
         $user = $this->getUser();
         $accounts = $user->getAccounts();
 
@@ -70,13 +68,16 @@ class BankController extends AbstractController
             $this->addFlash('success','Vous devez nécéssairement avoir plus de deux comptes pour effectuer un virement');
             return $this->redirectToRoute('bank');
         }
+
         // creation du formulaire
         $form = $this->createForm(VirementType::class, null, ['accounts' => $accounts]);
         $form->handleRequest($request);
+
         // si le formulaire est soumit
         if ($form->isSubmitted() && $form->isValid()) {
+            
             $data = $form->getData();
-  
+
             // Recupere l'objet Account pour modifier les donnée apres un débit ou un crédit
             $accountRepository = $this->getDoctrine()->getRepository(Account::class);
             $accountDebit = $accountRepository->findOneBy(['id' => $data['debit']]);
@@ -100,16 +101,22 @@ class BankController extends AbstractController
             $operationCredit->setRegistered(new \DateTime());
             $operationCredit->setLabel("Virement depuis le compte "  . $accountDebit->getId());
 
-            // Persiste et flush toutes les données précédemment modifiées ou ajoutées
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($accountDebit);
-            $entityManager->persist($accountCredit);
-            $entityManager->persist($operationDebit);
-            $entityManager->persist($operationCredit);
-            $entityManager->flush();
-            
-            $this->addFlash('success','Votre virement a bien été effectué.');
-            return $this->redirectToRoute('bank');
+            $errors = $validator->validate($operationCredit);
+
+            if(count($errors) === 0) {
+                if($accountCredit !== $accountDebit) {
+                    // Persiste et flush toutes les données précédemment modifiées ou ajoutées
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($accountDebit);
+                    $entityManager->persist($accountCredit);
+                    $entityManager->persist($operationDebit);
+                    $entityManager->persist($operationCredit);
+                    $entityManager->flush();
+                    
+                    $this->addFlash('success','Votre virement a bien été effectué.');
+                    return $this->redirectToRoute('bank');
+                }
+            }
         }
 
         return $this->render('bank/virement.html.twig', [

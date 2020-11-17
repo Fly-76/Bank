@@ -4,7 +4,15 @@
 
 {% block main %}
 
-<h2 class = "my-5">Virement</h2>
+<h2 class="my-5">Virement</h2>
+
+
+{% for error in errors %}
+<div class="alert-danger">
+    {{ error.message }}
+</div>
+{% endfor %}
+
 
 {{ form(form)}}
 {% endblock %}

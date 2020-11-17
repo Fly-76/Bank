@@ -72,12 +72,12 @@ class BankController extends AbstractController
         // creation du formulaire
         $form = $this->createForm(VirementType::class, null, ['accounts' => $accounts]);
         $form->handleRequest($request);
-
+        
         // si le formulaire est soumit
         if ($form->isSubmitted() && $form->isValid()) {
             
             $data = $form->getData();
-
+                
             // Recupere l'objet Account pour modifier les donnée apres un débit ou un crédit
             $accountRepository = $this->getDoctrine()->getRepository(Account::class);
             $accountDebit = $accountRepository->findOneBy(['id' => $data['debit']]);
@@ -114,7 +114,8 @@ class BankController extends AbstractController
                     $entityManager->flush();
                     
                     $this->addFlash('success','Votre virement a bien été effectué.');
-                    return $this->redirectToRoute('bank');
+                    return $this->redirectToRoute('virement');
+                    
                 }
             }
         }

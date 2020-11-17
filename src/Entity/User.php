@@ -103,6 +103,13 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 100,
+     *      minMessage = "L'adresse doit comporter au moins {{ limit }} caractères",
+     *      maxMessage = "L'adresse doit comporter au plus {{ limit }} caractères",
+     *      allowEmptyString = false
+     * )
      */
     private $adress;
 

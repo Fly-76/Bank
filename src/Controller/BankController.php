@@ -16,6 +16,7 @@ use App\Entity\User;
 use App\Form\ProfilType;
 use App\Form\NewAccountType;
 use App\Form\VirementType;
+use App\Form\CounterType;
 
 use APP\Repository;
 use DateTime;
@@ -56,7 +57,7 @@ class BankController extends AbstractController
     }
 
     /**
-     * @Route("/virement/", name="virement")
+     * @Route("/virement", name="virement")
      */
     public function virement(Request $request, ValidatorInterface $validator): Response
     {  
@@ -221,4 +222,37 @@ class BankController extends AbstractController
      
     }
 
+    /**
+     * @Route("/counter", name="counter")
+     */
+    public function counter(Request $request): Response
+    {  
+        $errors = null;
+        $user = $this->getUser();
+        $accounts = $user->getAccounts();
+
+        // creation du formulaire
+        $form = $this->createForm(CounterType::class, ['accounts' => $accounts]);
+        $form->handleRequest($request);
+        
+        // // si le formulaire est soumit
+        // if ($form->isSubmitted() && $form->isValid()) {
+            
+            $data = $form->getData();
+                dump($data['debit']);
+                dump($data['amount']);
+            
+                    
+                    $this->addFlash('success','Votre opération a bien été effectué.');
+                    return $this->redirectToRoute('counter');
+                    
+    
+            // }
+        // }
+
+        return $this->render('bank/counter.html.twig', [
+            'form' => $form->createView(),
+            'errors' => $errors,
+        ]);
+    }
 }

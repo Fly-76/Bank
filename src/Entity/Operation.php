@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\OperationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass=OperationRepository::class)
@@ -24,6 +26,17 @@ class Operation
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\Positive
+     * @Assert\NotNull
+     * @Assert\Type(
+     *     type="double",
+     *     message="Veuillez saisir un montant valide."
+     * )
+     * @Assert\Regex(
+     *     pattern="/\d/",
+     *     match=true,
+     *     message="Veuillez saisir un montant valide."
+     * )
      */
     private $amount;
 

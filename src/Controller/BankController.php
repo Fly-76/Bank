@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 use App\Repository\AccountRepository;
 use App\Entity\Operation;
@@ -19,6 +20,9 @@ use App\Form\VirementType;
 use APP\Repository;
 use DateTime;
 
+/**
+ * @IsGranted("IS_AUTHENTICATED_FULLY")
+*/
 class BankController extends AbstractController
 {
     /**
@@ -144,7 +148,7 @@ class BankController extends AbstractController
         ]);
     }
 
-      /**
+    /**
      * @Route("/new_account", name="new_account")
      */
     public function newAccount(Request $request, ValidatorInterface $validator): Response
@@ -188,13 +192,6 @@ class BankController extends AbstractController
     }
 
     /**
-     * @Route("/blog", name="blog")
-     */
-    public function blog(): Response
-    {
-        return $this->render('bank/blog.html.twig');
-    }
-      /**
      * @Route("/removeAccount/{id}", name="removeAccount", requirements={"id"="\d+"})
      */
     public function removeAccount(int $id): Response

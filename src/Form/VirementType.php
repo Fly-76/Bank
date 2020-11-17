@@ -20,10 +20,7 @@ class VirementType extends AbstractType
         dump($options);
         foreach ($accounts as $account){
 
-            $choices[] =  [$account->getAccountType() => $account->getAccountType()];
-
-            dump($account->getAccountType());
-            dump($choices);
+            $choices["compte numéro : " .$account->getId()] = $account->getId();
         }
         
         $builder

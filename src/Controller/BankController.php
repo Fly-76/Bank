@@ -36,8 +36,7 @@ class BankController extends AbstractController
         
         return $this->render('bank/index.html.twig', [
             'accounts' => $accounts,
-        ]);
-       
+        ]); 
     }
 
     /**

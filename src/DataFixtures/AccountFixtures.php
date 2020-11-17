@@ -25,6 +25,7 @@ class AccountFixtures extends Fixture implements DependentFixtureInterface
         for($i = 1; $i <=10; $i++){
                 $account = new Account();
                 $account->setUser($user)
+                        ->setNumber(800000 + $i)
                         ->setAmount(50)
                         ->setOpeningDate(new \DateTime())
                         ->setAccountType("Type de compte $i");

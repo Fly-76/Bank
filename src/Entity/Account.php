@@ -48,6 +48,11 @@ class Account
      */
     private $operations;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $number;
+
     public function __construct()
     {
         $this->operations = new ArrayCollection();
@@ -132,6 +137,18 @@ class Account
                 $operation->setAccountId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNumber(): ?int
+    {
+        return $this->number;
+    }
+
+    public function setNumber(int $number): self
+    {
+        $this->number = $number;
 
         return $this;
     }

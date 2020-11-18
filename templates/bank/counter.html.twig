@@ -1,0 +1,29 @@
+{% extends 'template.html.twig' %}
+
+{% block title %}Count{% endblock %}
+
+{% block main %}
+
+<h2 class="my-5">Dépôt / Retrait</h2>
+<div class="row justify-content-between">
+    <div class="col-4">
+        {{ form(form)}}
+    </div>
+    <div class="">
+        {% for accountField in account %}
+            <div class="card col-6 animate__animated animate__bounceInRight">
+                <img class="card-img-top" src="../assets/img/money.jpg" alt="money">
+                <div class="card-body">
+                    <h5 class="card-title">Compte numéro : {{ accountField.number }}</h5>
+                    <p class="card-text">{{ accountField.accountType }}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Montant : {{ accountField.amount }}</li>
+                </ul>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}

@@ -90,7 +90,7 @@ class BankController extends AbstractController
             // Crée un objet Operation de debit
             $operationDebit = new Operation();
             $operationDebit->setAccountId($accountDebit);
-            $operationDebit->setAmount("-" . $data['amount']);
+            $operationDebit->setAmount($data['amount']);
             $operationDebit->setOperationType("Débit");
             $operationDebit->setRegistered(new \DateTime());
             $operationDebit->setLabel("Virement vers le compte "  . $accountCredit->getNumber());
@@ -117,7 +117,6 @@ class BankController extends AbstractController
                     
                     $this->addFlash('success','Votre virement a bien été effectué.');
                     return $this->redirectToRoute('bank');
-                    
                 }
             }
         }

@@ -16,6 +16,7 @@
     </tr>
   </thead>
   <tbody>
+
     {% for operation in operations %}
       <tr>
         <td>{{ operation.registered | date('d/m/Y') }} à {{ operation.registered | date('H:i') }}</td>

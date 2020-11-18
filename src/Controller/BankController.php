@@ -51,7 +51,7 @@ class BankController extends AbstractController
     {
         $operationRepository = $this->getDoctrine()->getRepository(Operation::class);
         $operations = $operationRepository->findBy(['account_id' => $id]);
-
+        dump($operations);
         return $this->render('bank/operation.html.twig', [
             'operations' => $operations
         ]);
@@ -93,7 +93,7 @@ class BankController extends AbstractController
             $operationDebit->setAmount("-" . $data['amount']);
             $operationDebit->setOperationType("Débit");
             $operationDebit->setRegistered(new \DateTime());
-            $operationDebit->setLabel("Virement vers le compte "  . $accountCredit->getId());
+            $operationDebit->setLabel("Virement vers le compte "  . $accountCredit->getNumber());
 
             // Crée un objet Operation de credit
             $operationCredit = new Operation();
@@ -101,7 +101,7 @@ class BankController extends AbstractController
             $operationCredit->setAmount($data['amount']);
             $operationCredit->setOperationType("Crédit");
             $operationCredit->setRegistered(new \DateTime());
-            $operationCredit->setLabel("Virement depuis le compte "  . $accountDebit->getId());
+            $operationCredit->setLabel("Virement depuis le compte "  . $accountDebit->getNumber());
 
             $errors = $validator->validate($operationCredit);
 

@@ -186,6 +186,8 @@ class BankController extends AbstractController
                 $entityManager = $this->getDoctrine()->getManager();
                 //assigne l'utilisateur connecté
                 $account->setUser($user);
+                //assigne un numéro de compte
+                $account->setNumber(random_int(9999, 999999));
                 //assigne la date de creation 
                 $account->setOpeningDate(new\DateTime('now'));
                 $entityManager->persist($account);

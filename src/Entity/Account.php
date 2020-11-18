@@ -22,7 +22,7 @@ class Account
     private $id;
 
     /**
-    * @Assert\PositiveOrZero
+     * @Assert\PositiveOrZero
      * @ORM\Column(type="float")
      */
     private $amount;

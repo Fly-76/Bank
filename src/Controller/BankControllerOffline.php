@@ -29,4 +29,12 @@ class BankControllerOffline extends AbstractController
         return $this->render('bank/blog.html.twig');
     }
 
+    /**
+     * @Route("/statistiques", name="statistics")
+     */
+    public function statistics(): Response
+    {
+        return $this->render('bank/statistics.html.twig');
+    }
+
 }

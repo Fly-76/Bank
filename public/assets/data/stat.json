@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Taux d'emprunt",
+    "value": 1.15,
+    "variation": "+0.05"
+  },
+  {
+    "name": "CAC 40",
+    "value": 5000,
+    "variation": "-1.5%"
+  },
+  {
+    "name": "Croissance",
+    "value": "/",
+    "variation": "-2.5%"
+  },
+  {
+    "name": "Dette publique",
+    "value": "94%/PIB",
+    "variation": "+1.75"
+  }
+]

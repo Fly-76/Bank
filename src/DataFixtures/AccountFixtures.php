@@ -20,15 +20,22 @@ class AccountFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager)
     {
-           // this reference returns the User object created in UserFixtures
+        $accountType = [
+            'Compte Courant', 
+            'PEL', 
+            'Livret A', 
+            'PERP',
+        ];
+
+        // this reference returns the User object created in UserFixtures
         $user = $this->getReference(UserFixtures::ADMIN_USER_REFERENCE);
-        for($i = 1; $i <=10; $i++){
+        for($i = 1; $i <=6; $i++){
                 $account = new Account();
                 $account->setUser($user)
                         ->setNumber(800000 + $i)
-                        ->setAmount(50)
+                        ->setAmount(mt_rand(50, 5000))
                         ->setOpeningDate(new \DateTime())
-                        ->setAccountType("Type de compte $i");
+                        ->setAccountType($accountType[$i%4]);
 
             $manager->persist($account);
         }

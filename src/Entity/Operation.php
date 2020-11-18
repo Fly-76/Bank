@@ -28,15 +28,6 @@ class Operation
      * @ORM\Column(type="float")
      * @Assert\Positive
      * @Assert\NotNull
-     * @Assert\Type(
-     *     type="double",
-     *     message="Veuillez saisir un montant valide."
-     * )
-     * @Assert\Regex(
-     *     pattern="/\d/",
-     *     match=true,
-     *     message="Veuillez saisir un montant valide."
-     * )
      */
     private $amount;
 

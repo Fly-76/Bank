@@ -226,9 +226,9 @@ class BankController extends AbstractController
     /**
      * @Route("/counter/{id}", name="counter", requirements={"id"="\d+"})
      */
-    public function counter(int $id, Request $request): Response
+    public function counter(int $id, Request $request, ValidatorInterface $validator): Response
     {  
-        
+        $errors = null;
         $accountRepository = $this->getDoctrine()->getRepository(Account::class);
         $account = $accountRepository->findBy(['id' => $id]);
 
@@ -255,11 +255,17 @@ class BankController extends AbstractController
                 $operation->setRegistered(new \DateTime());
                 $operation->setLabel("Dépôt");
 
-                // Persiste et flush toutes les données précédemment modifiées ou ajoutées
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($account);
-                $entityManager->persist($operation);
-                $entityManager->flush($account);
+                $errors = $validator->validate($operation);
+                if(count($errors) === 0){
+
+                    // Persiste et flush toutes les données précédemment modifiées ou ajoutées
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($account);
+                    $entityManager->persist($operation);
+                    $entityManager->flush($account);
+                    $this->addFlash('success','Votre opération a bien été effectué.');
+                    return $this->redirectToRoute('bank');
+                }
             }   
 
             // si le formulaire soumet un retrait
@@ -271,24 +277,28 @@ class BankController extends AbstractController
                 // Crée un objet Operation de retrait
                 $operation = new Operation();
                 $operation->setAccountId($account);
-                $operation->setAmount("-" . $data['amount']);
+                $operation->setAmount($data['amount']);
                 $operation->setOperationType("Retrait");
                 $operation->setRegistered(new \DateTime());
                 $operation->setLabel("Retrait");
 
-                // Persiste et flush toutes les données précédemment modifiées ou ajoutées
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($account);
-                $entityManager->persist($operation);
-                $entityManager->flush($account);
-            }
+                $errors = $validator->validate($operation);
+                if(count($errors) === 0){
 
-            $this->addFlash('success','Votre opération a bien été effectué.');
-            return $this->redirectToRoute('bank');
+                    // Persiste et flush toutes les données précédemment modifiées ou ajoutées
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($account);
+                    $entityManager->persist($operation);
+                    $entityManager->flush($account);
+                    $this->addFlash('success','Votre opération a bien été effectué.');
+                    return $this->redirectToRoute('bank');
+                }
+            }
         }
         return $this->render('bank/counter.html.twig', [
             'form' => $form->createView(),
             'account' => $account,
+            'errors' => $errors,
         ]);
     }
 }

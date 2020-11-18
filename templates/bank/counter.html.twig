@@ -5,6 +5,13 @@
 {% block main %}
 
 <h2 class="my-5">Dépôt / Retrait</h2>
+
+{% for error in errors %}
+<div class="alert-danger">
+    {{ error.message }}
+</div>
+{% endfor %}
+
 <div class="row justify-content-between">
     <div class="col-4">
         {{ form(form)}}

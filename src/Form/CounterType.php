@@ -7,7 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class CounterType extends AbstractType
@@ -18,7 +18,7 @@ class CounterType extends AbstractType
             ->add('Mouvement', ChoiceType::class, array(
                 'choices' => array('Dépôt' => 'depot', 'Retrait' => 'retrait'),
             ))
-            ->add('amount', TextType::class, [
+            ->add('amount', NumberType::class, [
                 'label' => 'Montant',
             ])
             ->add('save', SubmitType::class, [

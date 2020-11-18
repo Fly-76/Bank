@@ -1,6 +1,6 @@
 {% extends 'template.html.twig' %}
 
-{% block title %}Hello BankController!{% endblock %}
+{% block title %}Bank{% endblock %}
 
 {% block main %}
 
@@ -16,10 +16,10 @@
         <p class="card-text mb-3">{{ account.amount }} €</p>
         <div>
             {# vers la page d'un seul account (avec ses operations) #}
-            <a  class="btn btn-secondary" href="{{ path('operation', {id: account.id}) }}">Details</a>
+            <a  class="btn btn-secondary m-2" href="{{ path('operation', {id: account.id}) }}">Details</a>
             {# vers la page de retrait guichet #}
-            <a class="btn btn-success">Retrait</a>
-            <a class="btn btn-danger" href="{{ path('removeAccount', {id: account.id}) }}" type="button">Suppr</a>
+            <a class="btn btn-success m-2" href="{{ path('counter', {id: account.id}) }}">Dépot/Retrait</a>
+            <a class="btn btn-danger m-2" href="{{ path('removeAccount', {id: account.id}) }}" type="button">Suppr</a>
             {# for modal #}
             {# <a class="btn btn-danger" href="{{ path('removeAccount', {id: account.id}) }}" type="button" data-toggle="modal" data-target="#Modal">Suppr</a> #}
         </div>    

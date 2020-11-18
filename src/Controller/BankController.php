@@ -16,9 +16,11 @@ use App\Entity\User;
 use App\Form\ProfilType;
 use App\Form\NewAccountType;
 use App\Form\VirementType;
+use App\Form\CounterType;
 
 use APP\Repository;
 use DateTime;
+use phpDocumentor\Reflection\Types\Null_;
 
 /**
  * @IsGranted("IS_AUTHENTICATED_FULLY")
@@ -56,7 +58,7 @@ class BankController extends AbstractController
     }
 
     /**
-     * @Route("/virement/", name="virement")
+     * @Route("/virement", name="virement")
      */
     public function virement(Request $request, ValidatorInterface $validator): Response
     {  
@@ -72,16 +74,16 @@ class BankController extends AbstractController
         // creation du formulaire
         $form = $this->createForm(VirementType::class, null, ['accounts' => $accounts]);
         $form->handleRequest($request);
-
+        
         // si le formulaire est soumit
         if ($form->isSubmitted() && $form->isValid()) {
             
             $data = $form->getData();
-
+                
             // Recupere l'objet Account pour modifier les donnée apres un débit ou un crédit
             $accountRepository = $this->getDoctrine()->getRepository(Account::class);
-            $accountDebit = $accountRepository->findOneBy(['id' => $data['debit']]);
-            $accountCredit = $accountRepository->findOneBy(['id' => $data['credit']]);
+            $accountDebit = $accountRepository->findOneBy(['number' => $data['debit']]);
+            $accountCredit = $accountRepository->findOneBy(['number' => $data['credit']]);
             $accountDebit->setAmount($accountDebit->getAmount() - $data['amount']);
             $accountCredit->setAmount($accountCredit->getAmount() + $data['amount']);
 
@@ -115,6 +117,7 @@ class BankController extends AbstractController
                     
                     $this->addFlash('success','Votre virement a bien été effectué.');
                     return $this->redirectToRoute('bank');
+                    
                 }
             }
         }
@@ -217,7 +220,74 @@ class BankController extends AbstractController
        
         return $this->redirectToRoute('index');
 
-     
     }
 
+    /**
+     * @Route("/counter/{id}", name="counter", requirements={"id"="\d+"})
+     */
+    public function counter(int $id, Request $request): Response
+    {  
+        
+        $accountRepository = $this->getDoctrine()->getRepository(Account::class);
+        $account = $accountRepository->findBy(['id' => $id]);
+
+        // creation du formulaire
+        $form = $this->createForm(CounterType::class, null);
+        $form->handleRequest($request);
+
+        // si le formulaire est soumit
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+            $data = $form->getData();
+
+            // si le formulaire soumet un depot
+            if($data['Mouvement'] === "depot"){
+                // Code lié au depot ici
+                $account = $accountRepository->findOneBy(['id' => $id]);
+                $account->setAmount($account->getAmount() + $data['amount']);
+            
+                // Crée un objet Operation de dépot
+                $operation = new Operation();
+                $operation->setAccountId($account);
+                $operation->setAmount($data['amount']);
+                $operation->setOperationType("Dépôt");
+                $operation->setRegistered(new \DateTime());
+                $operation->setLabel("Dépôt");
+
+                // Persiste et flush toutes les données précédemment modifiées ou ajoutées
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($account);
+                $entityManager->persist($operation);
+                $entityManager->flush($account);
+            }   
+
+            // si le formulaire soumet un retrait
+            if($data['Mouvement'] === "retrait"){
+                // code lié au retrait ici
+                $account = $accountRepository->findOneBy(['id' => $id]);
+                $account->setAmount($account->getAmount() - $data['amount']);
+
+                // Crée un objet Operation de retrait
+                $operation = new Operation();
+                $operation->setAccountId($account);
+                $operation->setAmount("-" . $data['amount']);
+                $operation->setOperationType("Retrait");
+                $operation->setRegistered(new \DateTime());
+                $operation->setLabel("Retrait");
+
+                // Persiste et flush toutes les données précédemment modifiées ou ajoutées
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($account);
+                $entityManager->persist($operation);
+                $entityManager->flush($account);
+            }
+
+            $this->addFlash('success','Votre opération a bien été effectué.');
+            return $this->redirectToRoute('bank');
+        }
+        return $this->render('bank/counter.html.twig', [
+            'form' => $form->createView(),
+            'account' => $account,
+        ]);
+    }
 }

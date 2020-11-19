@@ -4,57 +4,74 @@
 
 {% block main %}
 
+    <div class="d-flex flex-wrap">
+        {% for account in accounts %}
 
+            <div class="card text-white bg-primary mb-3 mx-4 w-25">
+                <div class="card-header bg-dark">{{ account.accountType }}</div>
+                <div class="card-body">
+                    <h4 class="card-title">Compte nº : {{ account.number }}  </h4>
+                    <p class="card-text mb-3">Solde : {{ account.amount }} €</p>
+                    <div>
+                        {# vers la page d'un seul account (avec ses operations) #}
+                        <a  class="btn btn-secondary my-1 w-100" href="{{ path('operation', {id: account.id}) }}">Détails</a>
+                        {# vers la page de retrait guichet #}
+                        <a class="btn btn-success my-1 w-100" href="{{ path('counter', {id: account.id}) }}">Dépot / Retrait</a>
+                        <a class="btn btn-danger my-1 w-100" id="delete" href="{{ path('removeAccount', {id: account.id}) }}" type="button">Supprimer</a>
+                        {# for modal #}
+                        {# <a class="btn btn-danger" href="{{ path('removeAccount', {id: account.id}) }}" type="button" data-toggle="modal" data-target="#Modal">Suppr</a> #}
+                    </div>    
+                </div>
+            </div>
+    
+            {# <!-- Modal -->
+            <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Suppression</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    <div class="modal-body">
+                        Vous etes sur le point de supprimer definitivement le compte [AFFICHER COMPTE]
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        <button href="{{ path('removeAccount', {id: account.id}) }}" type="button" class="btn btn-danger">Supprimer definitivement</button>
+                    </div>
+                    </div>
+                </div>
+            </div> #}
 
-<div class="d-flex flex-wrap">
-  {% for account in accounts %}
+        {% endfor %}
+    </div>
+  
+    <!-- modal -->
+    <div class="modal fade" id="rules" tabindex="-1" role="dialog" aria-labelledby="rulesTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="rulesTitle">Attention</h5>
+            </div>
+            <div id="rulesContent" class="modal-body">
 
-    <div class="card text-white bg-primary mb-3 mx-4 w-25">
-        <div class="card-header bg-dark">{{ account.accountType }}</div>
-        <div class="card-body">
-        <h4 class="card-title">Compte nº : {{ account.number }}  </h4>
-        <p class="card-text mb-3">{{ account.amount }} €</p>
-        <div>
-            {# vers la page d'un seul account (avec ses operations) #}
-            <a  class="btn btn-secondary m-2" href="{{ path('operation', {id: account.id}) }}">Details</a>
-            {# vers la page de retrait guichet #}
-            <a class="btn btn-success m-2" href="{{ path('counter', {id: account.id}) }}">Dépot/Retrait</a>
-            <a class="btn btn-danger m-2" href="{{ path('removeAccount', {id: account.id}) }}" type="button">Suppr</a>
-            {# for modal #}
-            {# <a class="btn btn-danger" href="{{ path('removeAccount', {id: account.id}) }}" type="button" data-toggle="modal" data-target="#Modal">Suppr</a> #}
-        </div>    
+            </div>
+            <div class="modal-footer bg-info text-white">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">J'ai compris</button>
+            </div>
+            </div>
         </div>
     </div>
-  
-{# <!-- Modal -->
-<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Suppression</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        Vous etes sur le point de supprimer definitivement le compte [AFFICHER COMPTE]
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-        <button href="{{ path('removeAccount', {id: account.id}) }}" type="button" class="btn btn-danger">Supprimer definitivement</button>
-      </div>
-    </div>
-  </div>
-</div> #}
-
-
-
-  {% endfor %}
-</div>
-
-
-
-  
+    <!-- end modal -->
 
 
 {% endblock %}
+
+
+{% block javascripts %}
+    <script src="{{ asset('assets/js/index.js') }}"></script>
+{% endblock %}
+
+

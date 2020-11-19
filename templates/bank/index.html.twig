@@ -7,11 +7,18 @@
     <div class="d-flex flex-wrap">
         {% for account in accounts %}
 
-            <div class="card text-white bg-primary mb-3 mx-4 w-25">
-                <div class="card-header bg-dark">{{ account.accountType }}</div>
+            <div class="card text-white bg-light mb-3 mx-4 w-25">
+                <div class="card-header bg-info">{{ account.accountType }}</div>
                 <div class="card-body">
-                    <h4 class="card-title">Compte nº : {{ account.number }}  </h4>
-                    <p class="card-text mb-3">Solde : {{ account.amount }} €</p>
+                    <h4 class="card-title text-dark">Compte nº : {{ account.number }}  </h4>
+                    {% if account.amount >= 0 %}
+                        <p class="card-text mb-3 text-success">Solde : {{ account.amount }} €</p>
+                    {% else %}
+                         <p class="card-text mb-3 text-danger">Solde : {{ account.amount }} €</p>
+                    {% endif %}
+                    <hr>
+                    <p class="text-secondary">Derniere opération : </p>
+                    <hr>
                     <div>
                         {# vers la page d'un seul account (avec ses operations) #}
                         <a  class="btn btn-secondary my-1 w-100" href="{{ path('operation', {id: account.id}) }}">Détails</a>

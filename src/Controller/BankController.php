@@ -68,7 +68,6 @@ class BankController extends AbstractController
 
         if (count($accounts) < 2) {
             $this->addFlash('success','Vous devez nécéssairement avoir plus de deux comptes pour effectuer un virement');
-            return $this->redirectToRoute('bank');
         }
 
         // creation du formulaire
@@ -117,6 +116,9 @@ class BankController extends AbstractController
                     
                     $this->addFlash('success','Votre virement a bien été effectué.');
                     return $this->redirectToRoute('bank');
+                }
+                else {
+                    $this->addFlash('success','Saisissez deux comptes differents.');
                 }
             }
         }

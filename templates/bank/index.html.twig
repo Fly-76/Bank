@@ -11,13 +11,13 @@
                 <div class="card-header bg-dark">{{ account.accountType }}</div>
                 <div class="card-body">
                     <h4 class="card-title">Compte nº : {{ account.number }}  </h4>
-                    <p class="card-text mb-3">{{ account.amount }} €</p>
+                    <p class="card-text mb-3">Solde : {{ account.amount }} €</p>
                     <div>
                         {# vers la page d'un seul account (avec ses operations) #}
-                        <a  class="btn btn-secondary m-2" href="{{ path('operation', {id: account.id}) }}">Détails</a>
+                        <a  class="btn btn-secondary my-1 w-100" href="{{ path('operation', {id: account.id}) }}">Détails</a>
                         {# vers la page de retrait guichet #}
-                        <a class="btn btn-success m-2" href="{{ path('counter', {id: account.id}) }}">Dépot/Retrait</a>
-                        <a class="btn btn-danger m-2" id="delete" href="{{ path('removeAccount', {id: account.id}) }}" type="button">Supprimer</a>
+                        <a class="btn btn-success my-1 w-100" href="{{ path('counter', {id: account.id}) }}">Dépot / Retrait</a>
+                        <a class="btn btn-danger my-1 w-100" id="delete" href="{{ path('removeAccount', {id: account.id}) }}" type="button">Supprimer</a>
                         {# for modal #}
                         {# <a class="btn btn-danger" href="{{ path('removeAccount', {id: account.id}) }}" type="button" data-toggle="modal" data-target="#Modal">Suppr</a> #}
                     </div>    

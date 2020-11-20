@@ -169,7 +169,7 @@ class BankController extends AbstractController
         $user = $this->getUser();
         $form = $this->createForm(NewAccountType::class, $account);
 
-
+        dump($account);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             
@@ -191,10 +191,25 @@ class BankController extends AbstractController
                 $account->setNumber(random_int(9999, 999999));
                 //assigne la date de creation 
                 $account->setOpeningDate(new\DateTime('now'));
+
                 $entityManager->persist($account);
                 $entityManager->flush();
-                // $this->addFlash('success, votre compte à bien été créé');
-                return $this->redirectToRoute('index');
+                // // $this->addFlash('success, votre compte à bien été créé');
+                // return $this->redirectToRoute('new_account');
+                
+                // si $acccount a un id
+                if($account->getId() !== null) {
+                    // Crée un objet Operation d'ouverture de compte
+                    $operation = new Operation();
+                    $operation->setAccountId($account);
+                    $operation->setAmount($account->getAmount());
+                    $operation->setOperationType("Ouverture de compte");
+                    $operation->setRegistered(new \DateTime());
+                    $operation->setLabel("Ouverture du compte "  . $account->getNumber());
+                    
+                    $entityManager->persist($operation);
+                    $entityManager->flush();
+                }
             }
         }
 

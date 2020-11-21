@@ -6,6 +6,8 @@ use App\Repository\AccountRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass=AccountRepository::class)
@@ -20,6 +22,7 @@ class Account
     private $id;
 
     /**
+     * @Assert\PositiveOrZero
      * @ORM\Column(type="float")
      */
     private $amount;
@@ -44,6 +47,11 @@ class Account
      * @ORM\OneToMany(targetEntity=Operation::class, mappedBy="account_id", orphanRemoval=true)
      */
     private $operations;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $number;
 
     public function __construct()
     {
@@ -129,6 +137,18 @@ class Account
                 $operation->setAccountId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNumber(): ?int
+    {
+        return $this->number;
+    }
+
+    public function setNumber(int $number): self
+    {
+        $this->number = $number;
 
         return $this;
     }
